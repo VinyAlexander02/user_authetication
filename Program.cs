@@ -2,6 +2,7 @@ using user_auth.Data;
 using Microsoft.EntityFrameworkCore;
 using user_auth.Models;
 using Microsoft.AspNetCore.Identity;
+using user_auth.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,10 @@ builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(bui
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<UserDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Depois
+builder.Services.AddScoped<RegisterService>();
+
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

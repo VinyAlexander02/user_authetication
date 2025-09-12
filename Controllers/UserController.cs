@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using user_auth.Data.Dto;
 using user_auth.Models;
+using user_auth.Services;
 
 namespace user_auth.Controller;
 
@@ -11,23 +12,18 @@ namespace user_auth.Controller;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private IMapper _mapper;
-    private UserManager<User> _userManager;
+    
+    private RegisterService _registerService;
 
-    public UserController(IMapper mapper, UserManager<User> userManager)
+    public UserController(RegisterService registerService)
     {
-        _mapper = mapper;
-        _userManager = userManager;
+        _registerService = registerService;
     }
 
     [HttpPost]
     public async Task<IActionResult> AddUser(CreateUserDto dto)
     {
-        User user = _mapper.Map<User>(dto);
-        IdentityResult res = await _userManager.CreateAsync(user, dto.Password);
-
-        if (res.Succeeded) return Ok("Registered User");
-
-        throw new ApplicationException($"Failed to add user with id {res}");
+        await _registerService.Register(dto);
+        return Ok("Registered User");
     }
 }
