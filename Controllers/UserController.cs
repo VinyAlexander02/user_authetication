@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using user_auth.Data.Dto;
+using user_auth.Data.Dtos;
 using user_auth.Models;
 using user_auth.Services;
 
@@ -13,17 +14,24 @@ namespace user_auth.Controller;
 public class UserController : ControllerBase
 {
     
-    private RegisterService _registerService;
+    private UserService _userService;
 
-    public UserController(RegisterService registerService)
+    public UserController(UserService registerService)
     {
-        _registerService = registerService;
+        _userService = registerService;
     }
 
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<IActionResult> AddUser(CreateUserDto dto)
     {
-        await _registerService.Register(dto);
+        await _userService.Register(dto);
         return Ok("Registered User");
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginUserDto dto)
+    {
+       await _userService.Login(dto);
+        return Ok("Usuário autenticado");
     }
 }
