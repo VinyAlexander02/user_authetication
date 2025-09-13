@@ -35,7 +35,7 @@ public class UserService
         }
     }
 
-    public async Task Login(LoginUserDto dto)
+    public async Task<string> Login(LoginUserDto dto)
     {
         var res = await _singInManager.PasswordSignInAsync(dto.UserName, dto.Password, false, false);
 
@@ -44,6 +44,11 @@ public class UserService
             throw new ApplicationException("Usuário não autenticado");
         }
 
-        _tokenService.GenerateToken(user);
+        var user = _singInManager.UserManager.Users.FirstOrDefault(user => user.NormalizedUserName == dto.UserName.ToUpper());
+
+        var token = _tokenService.GenerateToken(user);
+
+        return token;
+        
     }
 }

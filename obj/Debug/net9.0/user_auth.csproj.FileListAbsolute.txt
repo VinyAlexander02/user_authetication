@@ -170,3 +170,4 @@ C:\Users\vinic\OneDrive\Área de Trabalho\Folders\Alura\2 - .NET\2 - .NET_Contro
 C:\Users\vinic\OneDrive\Área de Trabalho\Folders\Alura\2 - .NET\2 - .NET_Controle_Usuario\user_auth\obj\Debug\net9.0\user_auth.pdb
 C:\Users\vinic\OneDrive\Área de Trabalho\Folders\Alura\2 - .NET\2 - .NET_Controle_Usuario\user_auth\obj\Debug\net9.0\user_auth.genruntimeconfig.cache
 C:\Users\vinic\OneDrive\Área de Trabalho\Folders\Alura\2 - .NET\2 - .NET_Controle_Usuario\user_auth\obj\Debug\net9.0\ref\user_auth.dll
+C:\Users\vinic\OneDrive\Área de Trabalho\Folders\Alura\2 - .NET\2 - .NET_Controle_Usuario\user_auth\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

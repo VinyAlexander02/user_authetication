@@ -9,7 +9,7 @@ namespace user_auth.Services;
 
 public class TokenService
 {
-    public void GenerateToken(User user)
+    public string GenerateToken(User user)
     {
         Claim[] claims = new Claim[]
         {
@@ -30,5 +30,7 @@ public class TokenService
             claims: claims,
             signingCredentials: signingCredentials
         );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

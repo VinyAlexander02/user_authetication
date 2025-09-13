@@ -15,8 +15,9 @@ builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<User
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// Depois
+
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<TokenService>();
 
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
