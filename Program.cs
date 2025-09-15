@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using user_auth.Models;
 using Microsoft.AspNetCore.Identity;
 using user_auth.Services;
+using user_auth.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,13 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.MapControllers(); // <- Adicione essa linha aqui
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("MinAge", policy =>
+    {
+        policy.AddRequirements(new MinAge(18));
+    });
+});
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
