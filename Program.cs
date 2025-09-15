@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using user_auth.Services;
 using user_auth.Authorization;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,21 @@ builder.Services.AddOpenApi();
 
 // Mova estas linhas para aqui
 builder.Services.AddSingleton<IAuthorizationHandler, AgeAuthorization>();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme =
+    JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9ABHDVTYV10JDBYVEHBDHJB52UBD6SDFF84D")),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ClockSkew = TimeSpan.Zero
+    };
+});
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("MinAge", policy =>
@@ -38,6 +56,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthorization(); // O UseAuthorization deve vir antes do MapControllers, após UseRouting.
+app.UseAuthentication();
 app.MapControllers(); 
 
 var summaries = new[]
