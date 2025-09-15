@@ -4,40 +4,21 @@ using user_auth.Models;
 using Microsoft.AspNetCore.Identity;
 using user_auth.Services;
 using user_auth.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers(); // <- Adicione essa linha aqui
-
-// Falando para o program como ele deve se conectar no banco de dados usando um determinado contexto
+// **TODOS OS SERVIÇOS DEVEM SER ADICIONADOS AQUI, ANTES DE builder.Build()**
+builder.Services.AddControllers(); 
 builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("UserConnection")));
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<UserDbContext>().AddDefaultTokenProviders();
-
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
-
-
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
-
-// Adicione este bloco para o roteamento dos controllers
-app.UseRouting();
-app.MapControllers(); // <- Adicione essa linha aqui
-
+// Mova estas linhas para aqui
+builder.Services.AddSingleton<IAuthorizationHandler, AgeAuthorization>();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("MinAge", policy =>
@@ -45,6 +26,20 @@ builder.Services.AddAuthorization(options =>
         policy.AddRequirements(new MinAge(18));
     });
 });
+
+var app = builder.Build();
+
+// O CÓDIGO A PARTIR DAQUI SÓ DEVE CONFIGURAR O PIPELINE DE REQUISIÇÃO (MIDDLEWARE)
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthorization(); // O UseAuthorization deve vir antes do MapControllers, após UseRouting.
+app.MapControllers(); 
+
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
