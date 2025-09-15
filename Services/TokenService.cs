@@ -9,6 +9,11 @@ namespace user_auth.Services;
 
 public class TokenService
 {
+    private IConfiguration _configuration;
+    public TokenService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
     public string GenerateToken(User user)
     {
         Claim[] claims = new Claim[]
@@ -19,7 +24,7 @@ public class TokenService
         };
 
         // Gerando uma chave geração do token
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9ABHDVTYV10JDBYVEHBDHJB52UBD6SDFF84D"));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SymmetricSecurityKey"]));
 
         // Gerando as chaves de acesso
         var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

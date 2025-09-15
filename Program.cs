@@ -12,8 +12,8 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // **TODOS OS SERVIÇOS DEVEM SER ADICIONADOS AQUI, ANTES DE builder.Build()**
-builder.Services.AddControllers(); 
-builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("UserConnection")));
+builder.Services.AddControllers();
+builder.Services.AddDbContext<UserDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:UserConnection"]));
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<UserDbContext>().AddDefaultTokenProviders();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<UserService>();
@@ -31,7 +31,7 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("9ABHDVTYV10JDBYVEHBDHJB52UBD6SDFF84D")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SymmetricSecurityKey"])), 
         ValidateAudience = false,
         ValidateIssuer = false,
         ClockSkew = TimeSpan.Zero
